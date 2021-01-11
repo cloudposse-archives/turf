@@ -62,12 +62,12 @@ func runWith(env map[string]string, cmd string, inArgs ...interface{}) error {
 
 // Build posse binary
 func Posse() error {
-	return runWith(flagEnv(), goexe, "build", "-ldflags", ldflags, buildFlags(), "-tags", buildTags(), packageName)
+	return runWith(flagEnv(), goexe, "build", "-ldflags", ldflags, buildFlags(), "-o", binName, "-tags", buildTags(), packageName)
 }
 
 // Build posse binary with race detector enabled
 func PosseRace() error {
-	return runWith(flagEnv(), goexe, "build", "-race", "-ldflags", ldflags, buildFlags(), "-tags", buildTags(), packageName)
+	return runWith(flagEnv(), goexe, "build", "-race", "-ldflags", ldflags, buildFlags(), "-o", binName, "-tags", buildTags(), packageName)
 }
 
 // Install posse binary
@@ -304,9 +304,9 @@ func isCI() bool {
 
 func buildFlags() []string {
 	if runtime.GOOS == "windows" {
-		return []string{"-buildmode", "exe", "-o", binName}
+		return []string{"-buildmode", "exe"}
 	}
-	return []string{"-o", binName}
+	return nil
 }
 
 func buildTags() string {
