@@ -35,6 +35,7 @@ import (
 )
 
 const (
+	binName      = "posse"
 	packageName  = "github.com/cloudposse/posse-cli"
 	noGitLdflags = "-X $PACKAGE/common/posse.buildDate=$BUILD_DATE"
 )
@@ -303,9 +304,9 @@ func isCI() bool {
 
 func buildFlags() []string {
 	if runtime.GOOS == "windows" {
-		return []string{"-buildmode", "exe"}
+		return []string{"-buildmode", "exe", "-o", binName}
 	}
-	return nil
+	return []string{"-o", binName}
 }
 
 func buildTags() string {
