@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 NAME HERE <EMAIL ADDRESS>
+Copyright © 2021 Cloud Posse, LLC
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,17 +13,19 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
-package main
+package cmd
 
 import (
-	"github.com/cloudposse/posse-cli/cmd"
-	"github.com/sirupsen/logrus"
+	"github.com/spf13/cobra"
 )
 
-func main() {
-	customFormatter := new(logrus.TextFormatter)
-	customFormatter.FullTimestamp = true
-	logrus.SetFormatter(customFormatter)
+var securityhubCmd = &cobra.Command{
+	Use:     "securityhub",
+	Aliases: []string{"hub", "sh"},
+	Short:   "AWS securityhub automation tasks",
+	Long:    "AWS securityhub automation tasks",
+}
 
-	cmd.Execute()
+func init() {
+	awsCmd.AddCommand(securityhubCmd)
 }
