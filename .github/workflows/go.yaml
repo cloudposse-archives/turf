@@ -51,4 +51,4 @@ jobs:
         uses: cloudposse/actions/github/release-assets@0.15.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          INPUT_PATH: ${{ github.workspace }}/release/${{ github.event.repository.name }}_*
+          INPUT_PATH: ${{ github.workspace }}/release/posse_*
