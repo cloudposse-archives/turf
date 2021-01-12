@@ -33,7 +33,6 @@ jobs:
       - name: "Build Go binaries"
         uses: cloudposse/actions/go/build@0.24.0
         env:
-          PATH: $PATH:$(go env GOPATH)/bin:$(go env GOPATH)
           GO111MODULE: on
           # Architectures to build for
           GOX_OSARCH: >-
