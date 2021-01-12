@@ -22,7 +22,7 @@ jobs:
       - name: Install GO CI dependencies
         run: |
           go get github.com/magefile/mage
-          go get github.com/mitchell/gox
+          go get github.com/mitchellh/gox
 
       - name: Test
         run: |
