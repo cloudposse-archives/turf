@@ -1,10 +1,9 @@
-module github.com/cloudposse/posse
+module github.com/cloudposse/posse-cli
 
 go 1.15
 
 require (
 	github.com/aws/aws-sdk-go v1.36.22
-	github.com/cloudposse/posse-cli v0.0.0-20210112171826-07babdf52601
 	github.com/docker/docker-credential-helpers v0.6.3
 	github.com/magefile/mage v1.11.0
 	github.com/mitchellh/go-homedir v1.1.0

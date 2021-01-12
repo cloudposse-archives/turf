@@ -38,6 +38,9 @@ jobs:
             darwin/amd64 linux/386 linux/amd64 freebsd/amd64 freebsd/386 openbsd/386 openbsd/amd64
           OUTPUT_PATH: ${{ github.workspace }}/release/posse_
 
+      - name: Rename binary
+        run: mv ${{ github.workspace }}/release/posse_
+
       - name: "Upload artifacts to GitHub"
         uses: actions/upload-artifact@v2
         with:
