@@ -14,11 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package common
 
-// CurrentVersion represents the current build version.
-var CurrentVersion = Version{
-	Number:     0.1,
-	PatchLevel: 0,
-	Suffix:     "-DEV",
+func contains(s []int, e int) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }

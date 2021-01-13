@@ -14,11 +14,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package common
 
-// CurrentVersion represents the current build version.
-var CurrentVersion = Version{
-	Number:     0.1,
-	PatchLevel: 0,
-	Suffix:     "-DEV",
+import (
+	"os"
+
+	"github.com/sirupsen/logrus"
+)
+
+// AssertErrorNil asserts that the error is nil and, if not, exits with an error
+func AssertErrorNil(err error) {
+	if err != nil {
+		logrus.Error(err)
+		os.Exit(1)
+	}
 }

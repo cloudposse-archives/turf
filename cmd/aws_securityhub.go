@@ -14,11 +14,19 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package cmd
 
-// CurrentVersion represents the current build version.
-var CurrentVersion = Version{
-	Number:     0.1,
-	PatchLevel: 0,
-	Suffix:     "-DEV",
+import (
+	"github.com/spf13/cobra"
+)
+
+var securityhubCmd = &cobra.Command{
+	Use:     "securityhub",
+	Aliases: []string{"hub", "sh"},
+	Short:   "AWS securityhub automation tasks",
+	Long:    "AWS securityhub automation tasks",
+}
+
+func init() {
+	awsCmd.AddCommand(securityhubCmd)
 }
