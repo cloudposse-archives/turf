@@ -23,8 +23,8 @@ import (
 var securityhubCmd = &cobra.Command{
 	Use:     "securityhub",
 	Aliases: []string{"hub", "sh"},
-	Short:   "AWS securityhub automation tasks",
-	Long:    "AWS securityhub automation tasks",
+	Short:   "AWS Security Hub automation tasks",
+	Long:    "AWS Security Hub automation tasks",
 }
 
 func init() {
