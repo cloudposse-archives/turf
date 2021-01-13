@@ -34,5 +34,6 @@ change-template: |
     <summary>$TITLE @$AUTHOR (#$NUMBER)</summary>
     $BODY
   </details>
+
 template: |
   $CHANGES
