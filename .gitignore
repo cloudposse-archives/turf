@@ -13,4 +13,5 @@
 
 # Dependency directories
 vendor/
+.build-harness/
 build-harness/

@@ -27,19 +27,13 @@
 
 -->
 
-Command line utility for creating GitHub comments on Commits, Pull Request Reviews, Pull Request Files, Issues and Pull Requests.
+Command line utility for assisting with various automations that are difficult or impossible in Terraform
 
-GitHub API supports these types of comments:
+The utility provides the following functions:
+  
+* Enable AWS Security Hub in for the AWS Organization and associate all member accounts
 
-* [Comments on Repos/Commits](https://developer.github.com/v3/repos/comments)
-* [Comments on Pull Request Reviews](https://developer.github.com/v3/pulls/reviews/#create-a-pull-request-review)
-* [Comments on Pull Request Files](https://developer.github.com/v3/pulls/comments)
-* [Comments on Issues](https://developer.github.com/v3/issues/comments)
-* [Comments on Pull Requests (in the global section)](https://developer.github.com/v3/issues/comments)
-
-Since GitHub considers Pull Requests as Issues, `Comments on Issues` and `Comments on Pull Requests` use the same API.
-
-The utility supports all these types of comments (`commit`, `pr-review`, `pr-file`, `issue`, `pr`).
+See `posse --help` for more details
 
 
 ---
@@ -67,12 +61,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 
-## Screenshots
-
-
-![PR](images/github-pr-review-comment.png)
-*GitHub PR Review Comment*
-
 
 
 ## Usage
@@ -81,7 +69,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 ```sh
-    posse -h for help
+    posse --help for help
 ```
 
 
@@ -96,14 +84,14 @@ The utility can be called directly or as a Docker container.
 ```sh
 go get
 
-CGO_ENABLED=0 go build -v -o "./dist/bin/posse-cli" *.go
+CGO_ENABLED=0 go build -v -o "./dist/bin/posse" *.go
 ```
 
 
 ### Run locally
 
 ```sh
-./dist/bin/posse-cli
+./dist/bin/posse
 ```
 
 
@@ -111,7 +99,7 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/posse-cli" *.go
 [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
 
 ```sh
-./dist/bin/posse-cli \
+./dist/bin/posse \
         aws \
         hub set-administrator-account \
         -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
