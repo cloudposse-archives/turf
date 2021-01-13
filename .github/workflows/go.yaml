@@ -32,7 +32,7 @@ jobs:
 
       - name: "Attach artifacts to GitHub Release"
         if: ${{ github.event_name == 'release' }}
-        uses: cloudposse/actions/github/release-assets@0.15.0
+        uses: cloudposse/actions/github/release-assets@0.24.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_PATH: ${{ github.workspace }}/release/posse_*
