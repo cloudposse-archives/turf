@@ -27,8 +27,7 @@
 
 -->
 
-Command line utility for assisting with various automation tasks that are difficult or impossible with Terraform or
-other tools.
+Command line utility for assisting with various automation tasks that are difficult with Terraform or other tools.
 
 The utility provides the following functions:
   
