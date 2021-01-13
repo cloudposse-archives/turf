@@ -1,0 +1,119 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: posse-cli
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/posse-cli
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://github.com/cloudposse/posse-cli/workflows/go/badge.svg?branch=master"
+    url: "https://github.com/cloudposse/posse-cli/actions"
+  - name: "Docker Status"
+    image: "https://github.com/cloudposse/posse-cli/workflows/docker/badge.svg?branch=master"
+    url: "https://github.com/cloudposse/posse-cli/actions"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/posse-cli.svg"
+    url: "https://github.com/cloudposse/posse-cli/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+# Short description of this project
+description: |-
+  Command line utility for creating GitHub comments on Commits, Pull Request Reviews, Pull Request Files, Issues and Pull Requests.
+
+  GitHub API supports these types of comments:
+
+  * [Comments on Repos/Commits](https://developer.github.com/v3/repos/comments)
+  * [Comments on Pull Request Reviews](https://developer.github.com/v3/pulls/reviews/#create-a-pull-request-review)
+  * [Comments on Pull Request Files](https://developer.github.com/v3/pulls/comments)
+  * [Comments on Issues](https://developer.github.com/v3/issues/comments)
+  * [Comments on Pull Requests (in the global section)](https://developer.github.com/v3/issues/comments)
+
+  Since GitHub considers Pull Requests as Issues, `Comments on Issues` and `Comments on Pull Requests` use the same API.
+
+  The utility supports all these types of comments (`commit`, `pr-review`, `pr-file`, `issue`, `pr`).
+
+related:
+  - name: "terraform-aws-security-hub"
+    description: "Terraform module to provision AWS Security Hub"
+    url: "https://github.com/cloudposse/terraform-aws-security-hub"
+
+screenshots:
+  - name: "PR"
+    description: "GitHub PR Review Comment"
+    url: "images/github-pr-review-comment.png"
+
+# How to use this project
+usage: |-
+
+  ```sh
+      posse -h for help
+  ```
+
+examples: |-
+  The utility can be called directly or as a Docker container.
+
+  ### Build the Go program locally
+
+  ```sh
+  go get
+
+  CGO_ENABLED=0 go build -v -o "./dist/bin/posse-cli" *.go
+  ```
+
+
+  ### Run locally
+
+  ```sh
+  ./dist/bin/posse-cli
+  ```
+
+
+  ### Run locally with command-line arguments
+  [run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
+
+  ```sh
+  ./dist/bin/posse-cli \
+          aws \
+          hub set-administrator-account \
+          -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+          -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+          --region us-west-2
+  ```
+
+  ### Build the Docker image
+  __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
+
+
+  ```sh
+  docker build --tag posse-cli  --no-cache=true .
+  ```
+
+  ### Run with Docker
+  Run `posse-cli` in a Docker container with local ENV vars propagated into the container's environment.
+  [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
+
+  ```sh
+  docker run -i --rm \
+          posse-cli
+  ```
+
+# Contributors to this project
+contributors:
+  - name: "Matt Calhoun"
+    homepage: "https://github.com/mcalhoun"
+    github: "mcalhoun"
