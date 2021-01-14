@@ -112,8 +112,25 @@ func getDetectorIDForRegion(client *guardduty.GuardDuty) string {
 	return *detectors.DetectorIds[0]
 }
 
+func enableGuardDutyAutoEnable(client *guardduty.GuardDuty, autoEnableS3Protection bool) {
+	logrus.Info("    Enabling GuardDuty Auto-Enable for new AWS Organization Member Accounts")
+	detector := getDetectorIDForRegion(client)
+
+	updateInput := guardduty.UpdateOrganizationConfigurationInput{
+		AutoEnable: aws.Bool(true),
+		DetectorId: aws.String(detector),
+		DataSources: &guardduty.OrganizationDataSourceConfigurations{
+			S3Logs: &guardduty.OrganizationS3LogsConfiguration{
+				AutoEnable: aws.Bool(autoEnableS3Protection),
+			},
+		},
+	}
+
+	client.UpdateOrganizationConfiguration(&updateInput)
+}
+
 // EnableGuardDutyAdministratorAccount enables the GuardDuty Administrator account within the AWS Organization
-func EnableGuardDutyAdministratorAccount(region string, administratorAccountRole string, rootRole string) error {
+func EnableGuardDutyAdministratorAccount(region string, administratorAccountRole string, rootRole string, autoEnableS3Protection bool) error {
 	rootSession := GetSession()
 	rootAccountID := GetAccountID(rootSession, rootRole)
 
@@ -136,14 +153,18 @@ func EnableGuardDutyAdministratorAccount(region string, administratorAccountRole
 		rootAccountClient := getGuardDutyClient(currentRegion, rootRole)
 		adminAccountClient := getGuardDutyClient(currentRegion, administratorAccountRole)
 
+		detectorID := getDetectorIDForRegion(adminAccountClient)
+
 		if !guardDutyAdminAccountAlreadyEnabled(rootAccountClient, adminAccountID) {
 			enableGuardDutyAdminAccount(rootAccountClient, adminAccountID)
+			detectorID = getDetectorIDForRegion(adminAccountClient)
+
 			enableGuardDutyInManagementAccount(rootAccountClient)
+
 		} else {
 			logrus.Infof("    Account %s is already set as AWS GuardDuty Administrator Account, skipping configuration", adminAccountID)
 		}
-
-		detectorID := getDetectorIDForRegion(adminAccountClient)
+		enableGuardDutyAutoEnable(adminAccountClient, autoEnableS3Protection)
 		addGuardDutyMemberAccounts(adminAccountClient, detectorID, memberAccounts, adminAccountID)
 	}
 	logrus.Infof("Organization-wide AWS GuardDuty complete")

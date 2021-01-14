@@ -22,13 +22,17 @@ import (
 	"github.com/cloudposse/posse-cli/aws"
 )
 
+var autoEnableS3 bool
+
+const autoEnableS3Flag string = "auto-enable-s3-protection"
+
 var guardDutyAddMembersCmd = &cobra.Command{
 	Use:     "set-administrator-account",
 	Aliases: []string{"admin-account"},
 	Short:   "Set GuardDuty administrator account and member accounts",
 	Long:    "Designate the AWS Organization's AWS GuardDuty Admininstrator Account, then enable all the AWS Organization accounts as members",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return aws.EnableGuardDutyAdministratorAccount(region, administratorAccountRole, rootRole)
+		return aws.EnableGuardDutyAdministratorAccount(region, administratorAccountRole, rootRole, autoEnableS3)
 	},
 }
 
@@ -37,4 +41,5 @@ func init() {
 
 	guardDutyAddMembersCmd.Flags().StringVarP(&administratorAccountRole, adminAccountRoleFlag, "a", "", "The ARN of a role to assume with access to the organization's GuardDuty Administrator Account")
 	guardDutyAddMembersCmd.Flags().StringVarP(&rootRole, rootRoleFlag, "r", "", "The ARN of a role to assume with access to AWS Management Account")
+	guardDutyAddMembersCmd.Flags().BoolVarP(&autoEnableS3, autoEnableS3Flag, "", false, "Auto-enable S3 protection")
 }

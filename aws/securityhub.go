@@ -46,7 +46,8 @@ func enableSecurityHubInManagementAccount(client *securityhub.SecurityHub) {
 	}
 }
 
-func enableAutoEnable(client *securityhub.SecurityHub) {
+func enableSecurityHubAutoEnable(client *securityhub.SecurityHub) {
+	logrus.Info("    Setting Security Hub Auto-Enable for new AWS Organization Member Accounts")
 	updateInput := securityhub.UpdateOrganizationConfigurationInput{AutoEnable: aws.Bool(true)}
 	client.UpdateOrganizationConfiguration(&updateInput)
 }
@@ -128,7 +129,7 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 
 		if !securityHubAdminAccountAlreadyEnabled(rootAccountClient, adminAccountID) {
 			enableSecurityHubAdminAccount(rootAccountClient, adminAccountID)
-			enableAutoEnable(adminAccountClient)
+			enableSecurityHubAutoEnable(adminAccountClient)
 			enableSecurityHubInManagementAccount(rootAccountClient)
 		} else {
 			logrus.Infof("    Account %s is already set as AWS Security Hub Administrator Account, skipping configuration", adminAccountID)
