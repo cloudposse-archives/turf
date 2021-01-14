@@ -28,6 +28,12 @@ func getOrgClient(role string) *organizations.Organizations {
 	return organizations.New(sess, &aws.Config{Credentials: creds})
 }
 
+// AccountWithEmail contains AccountID and Email
+type AccountWithEmail struct {
+	AccountID string
+	Email     string
+}
+
 // ListMemberAccountIDs provides a list of AWS Accounts that are members of the AWS Organization
 func ListMemberAccountIDs(role string) []string {
 	client := getOrgClient(role)
@@ -40,4 +46,19 @@ func ListMemberAccountIDs(role string) []string {
 	}
 
 	return accountIDs
+}
+
+// ListMemberAccountIDsWithEmails provides a list of AWS Accounts that are members of the AWS Organization along with
+// their email addresses
+func ListMemberAccountIDsWithEmails(role string) []AccountWithEmail {
+	client := getOrgClient(role)
+	accounts, err := client.ListAccounts(&organizations.ListAccountsInput{})
+	common.AssertErrorNil(err)
+
+	accountsList := make([]AccountWithEmail, 0)
+	for i := range accounts.Accounts {
+		accountsList = append(accountsList, AccountWithEmail{AccountID: *accounts.Accounts[i].Id, Email: *accounts.Accounts[i].Email})
+	}
+
+	return accountsList
 }
