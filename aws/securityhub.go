@@ -31,7 +31,7 @@ func getSecurityHubClient(region string, role string) *securityhub.SecurityHub {
 	return securityHubClient
 }
 
-func enableAdminAccount(client *securityhub.SecurityHub, accountID string) {
+func enableSecurityHubAdminAccount(client *securityhub.SecurityHub, accountID string) {
 	updateInput := securityhub.EnableOrganizationAdminAccountInput{AdminAccountId: &accountID}
 	client.EnableOrganizationAdminAccount(&updateInput)
 }
@@ -51,11 +51,11 @@ func enableAutoEnable(client *securityhub.SecurityHub) {
 	client.UpdateOrganizationConfiguration(&updateInput)
 }
 
-func isAdministratorAccountEnabled() bool {
+func isSecurityHubAdministratorAccountEnabled() bool {
 	return false
 }
 
-func containsAdminAccount(s []*securityhub.AdminAccount, e string) bool {
+func containsSecurityHubAdminAccount(s []*securityhub.AdminAccount, e string) bool {
 	for _, a := range s {
 		if *a.AccountId == e {
 			return true
@@ -64,17 +64,17 @@ func containsAdminAccount(s []*securityhub.AdminAccount, e string) bool {
 	return false
 }
 
-func adminAccountAlreadyEnabled(client *securityhub.SecurityHub, accountID string) bool {
+func securityHubAdminAccountAlreadyEnabled(client *securityhub.SecurityHub, accountID string) bool {
 	listInput := securityhub.ListOrganizationAdminAccountsInput{}
 	orgConfig, err := client.ListOrganizationAdminAccounts(&listInput)
 	common.AssertErrorNil(err)
-	if containsAdminAccount(orgConfig.AdminAccounts, accountID) {
+	if containsSecurityHubAdminAccount(orgConfig.AdminAccounts, accountID) {
 		return true
 	}
 	return false
 }
 
-func logMemberAccounts(memberAccounts []string) {
+func logSecurityHubMemberAccounts(memberAccounts []string) {
 	logrus.Info("  AWS Security Hub Member accounts:")
 
 	for i := range memberAccounts {
@@ -83,7 +83,7 @@ func logMemberAccounts(memberAccounts []string) {
 }
 
 // addMemberAccount adds an account in the AWS Organization as a member of the Security Hub Administrator Account
-func addMemberAccounts(client *securityhub.SecurityHub, memberAccounts []string, administratorAcctID string) {
+func addSecurityHubMemberAccounts(client *securityhub.SecurityHub, memberAccounts []string, administratorAcctID string) {
 	accountDetails := make([]*securityhub.AccountDetails, 0)
 	for i := range memberAccounts {
 		currentAccountID := memberAccounts[i]
@@ -102,8 +102,8 @@ func addMemberAccounts(client *securityhub.SecurityHub, memberAccounts []string,
 	}
 }
 
-// EnableAdministratorAccount enables the Security Hub Administrator account within the AWS Organization
-func EnableAdministratorAccount(region string, administratorAccountRole string, rootRole string) error {
+// EnableSecurityHubAdministratorAccount enables the Security Hub Administrator account within the AWS Organization
+func EnableSecurityHubAdministratorAccount(region string, administratorAccountRole string, rootRole string) error {
 	rootSession := GetSession()
 	rootAccountID := GetAccountID(rootSession, rootRole)
 
@@ -117,7 +117,7 @@ func EnableAdministratorAccount(region string, administratorAccountRole string, 
 	logrus.Infof("  AWS Security Hub Administrator Account %s", adminAccountID)
 
 	memberAccounts := ListMemberAccountIDs(rootRole)
-	logMemberAccounts(memberAccounts)
+	logSecurityHubMemberAccounts(memberAccounts)
 
 	for r := range enabledRegions {
 		currentRegion := enabledRegions[r]
@@ -126,15 +126,15 @@ func EnableAdministratorAccount(region string, administratorAccountRole string, 
 		rootAccountClient := getSecurityHubClient(currentRegion, rootRole)
 		adminAccountClient := getSecurityHubClient(currentRegion, administratorAccountRole)
 
-		if !adminAccountAlreadyEnabled(rootAccountClient, adminAccountID) {
-			enableAdminAccount(rootAccountClient, adminAccountID)
+		if !securityHubAdminAccountAlreadyEnabled(rootAccountClient, adminAccountID) {
+			enableSecurityHubAdminAccount(rootAccountClient, adminAccountID)
 			enableAutoEnable(adminAccountClient)
 			enableSecurityHubInManagementAccount(rootAccountClient)
 		} else {
 			logrus.Infof("    Account %s is already set as AWS Security Hub Administrator Account, skipping configuration", adminAccountID)
 		}
 
-		addMemberAccounts(adminAccountClient, memberAccounts, adminAccountID)
+		addSecurityHubMemberAccounts(adminAccountClient, memberAccounts, adminAccountID)
 	}
 	logrus.Infof("Organization-wide AWS Security Hub complete")
 
