@@ -73,6 +73,7 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
     posse --help for help
 ```
 
+### Delete all the VPCs in an AWS Account
 ```sh
     posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
 ```
