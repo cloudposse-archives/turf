@@ -3,7 +3,7 @@ module github.com/cloudposse/posse-cli
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go v1.36.25
+	github.com/aws/aws-sdk-go v1.36.28
 	github.com/docker/docker-credential-helpers v0.6.3
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/konsorten/go-windows-terminal-sequences v1.0.3 // indirect
