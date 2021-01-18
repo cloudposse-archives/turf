@@ -32,6 +32,7 @@ Command line utility for assisting with various automation tasks that are diffic
 The utility provides the following functions:
   
 * Enable AWS Security Hub in for the AWS Organization and associate all member accounts
+* Delete all of the default VPCs in an account
 
 See `posse --help` for more details
 
@@ -70,6 +71,10 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 ```sh
     posse --help for help
+```
+
+```sh
+    posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
 ```
 
 
