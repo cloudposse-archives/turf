@@ -72,11 +72,17 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
     posse --help for help
 ```
 
+### Deploy Guard Duty to AWS Organization
+```sh
+  posse aws \
+    guardduty \
+    set-administrator-account \
+    -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+    -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+    --region us-west-2
+```
 
-
-
-## Examples
-
+examples: |-
 The utility can be called directly or as a Docker container.
 
 ### Build the Go program locally
@@ -123,6 +129,9 @@ Run `posse-cli` in a Docker container with local ENV vars propagated into the co
 docker run -i --rm \
         posse-cli
 ```
+
+
+
 
 
 
