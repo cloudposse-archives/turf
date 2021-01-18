@@ -137,7 +137,7 @@ func EnableGuardDutyAdministratorAccount(region string, administratorAccountRole
 	adminAcctSession := GetSession()
 	adminAccountID := GetAccountID(adminAcctSession, administratorAccountRole)
 
-	enabledRegions := GetEnabledRegions(rootRole)
+	enabledRegions := GetEnabledRegions(region, rootRole)
 
 	logrus.Info("Enabling organization-wide AWS GuardDuty with the following config:")
 	logrus.Infof("  AWS Management Account %s", rootAccountID)

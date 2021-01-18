@@ -20,17 +20,36 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/ec2"
 	common "github.com/cloudposse/posse-cli/common/error"
+	"github.com/sirupsen/logrus"
 )
 
-func getEC2Client(role string) *ec2.EC2 {
+func getEC2Client(region string, role string) *ec2.EC2 {
 	sess := GetSession()
 	creds := GetCreds(sess, role)
-	return ec2.New(sess, &aws.Config{Credentials: creds})
+	return ec2.New(sess, &aws.Config{Credentials: creds, Region: &region})
+}
+
+func getDefaultVPC(client *ec2.EC2) string {
+	filters := []*ec2.Filter{
+		&ec2.Filter{
+			Name:   aws.String("isDefault"),
+			Values: []*string{aws.String("true")},
+		},
+	}
+	describeInput := &ec2.DescribeVpcsInput{Filters: filters}
+	defaultVpc, err := client.DescribeVpcs(describeInput)
+	common.AssertErrorNil(err)
+
+	if len(defaultVpc.Vpcs) == 0 {
+		logrus.Info("      no default VPC found")
+		return ""
+	}
+	return *defaultVpc.Vpcs[0].VpcId
 }
 
 // GetEnabledRegions provides a list of AWS Regions that are enabled
-func GetEnabledRegions(role string) []string {
-	client := getEC2Client(role)
+func GetEnabledRegions(region string, role string) []string {
+	client := getEC2Client(region, role)
 	regions, err := client.DescribeRegions(&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)})
 	common.AssertErrorNil(err)
 
