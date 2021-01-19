@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: "Build Go binaries"
-        uses: cloudposse/actions/go/build@0.24.0
+        uses: cloudposse/actions/go/build@0.24.1
         env:
           GO111MODULE: on
           # Architectures to build for
@@ -32,7 +32,7 @@ jobs:
 
       - name: "Attach artifacts to GitHub Release"
         if: ${{ github.event_name == 'release' }}
-        uses: cloudposse/actions/github/release-assets@0.24.0
+        uses: cloudposse/actions/github/release-assets@0.24.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_PATH: ${{ github.workspace }}/release/posse_*
