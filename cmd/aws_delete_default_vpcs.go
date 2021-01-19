@@ -31,7 +31,10 @@ const shouldDeleteFlag string = "delete"
 var deleteDefaultVPCsCmd = &cobra.Command{
 	Use:   "delete-default-vpcs",
 	Short: "Delete the default VPCs in each region of the account",
-	Long:  "Delete the default VPCs in each region of the account",
+	Long: `Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. 
+	AWS Security Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather 
+	than jumping through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, 
+	so this command is necessary.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		return aws.DeleteDefaultVPCs(region, role, shouldDelete)
 	},
