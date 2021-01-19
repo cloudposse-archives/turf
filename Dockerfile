@@ -5,7 +5,7 @@ WORKDIR /usr/src/
 COPY . /usr/src
 RUN go build -v -o "bin/posse" *.go
 
-FROM alpine:3.12
+FROM alpine:3.13
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /usr/src/bin/* /usr/bin/
 ENV PATH $PATH:/usr/bin
