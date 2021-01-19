@@ -23,6 +23,13 @@ import (
 var region string
 var profile string
 
+// These flags are used in the GuardDuty and Security Hub sub-commands
+const adminAccountRoleFlag string = "administrator-account-role"
+const rootRoleFlag string = "root-role"
+
+var administratorAccountRole string
+var rootRole string
+
 var awsCmd = &cobra.Command{
 	Use:   "aws",
 	Short: "Commands related to automating AWS",

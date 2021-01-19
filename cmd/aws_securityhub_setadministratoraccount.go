@@ -22,25 +22,19 @@ import (
 	"github.com/cloudposse/posse-cli/aws"
 )
 
-const adminAccountRoleFlag string = "administrator-account-role"
-const rootRoleFlag string = "root-role"
-
-var administratorAccountRole string
-var rootRole string
-
 var securityHubAddMembersCmd = &cobra.Command{
 	Use:     "set-administrator-account",
 	Aliases: []string{"admin-account"},
-	Short:   "Set SecurityHub administartor account and member accounts",
-	Long:    "Designate the AWS Organization's AWS SecurityHub Admininstrator Account, then enabled all the AWS Organization accounts as members",
+	Short:   "Set Security Hub administrator account and member accounts",
+	Long:    "Designate the AWS Organization's AWS Security Hub Admininstrator Account, then enabled all the AWS Organization accounts as members",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return aws.EnableAdministratorAccount(region, administratorAccountRole, rootRole)
+		return aws.EnableSecurityHubAdministratorAccount(region, administratorAccountRole, rootRole)
 	},
 }
 
 func init() {
 	securityhubCmd.AddCommand(securityHubAddMembersCmd)
 
-	securityHubAddMembersCmd.Flags().StringVarP(&administratorAccountRole, adminAccountRoleFlag, "a", "", "The ARN of a role to assume with access to the organization's SecurityHub Administrator Account")
+	securityHubAddMembersCmd.Flags().StringVarP(&administratorAccountRole, adminAccountRoleFlag, "a", "", "The ARN of a role to assume with access to the organization's Security Hub Administrator Account")
 	securityHubAddMembersCmd.Flags().StringVarP(&rootRole, rootRoleFlag, "r", "", "The ARN of a role to assume with access to AWS Management Account")
 }

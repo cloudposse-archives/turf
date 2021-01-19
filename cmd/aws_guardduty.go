@@ -20,13 +20,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var securityhubCmd = &cobra.Command{
-	Use:     "securityhub",
-	Aliases: []string{"hub", "sh"},
-	Short:   "AWS Security Hub automation tasks",
-	Long:    "AWS Security Hub automation tasks",
+var guardDutyCmd = &cobra.Command{
+	Use:   "guardduty",
+	Short: "AWS GuardDuty automation tasks",
+	Long:  "AWS GuardDuty automation tasks",
 }
 
 func init() {
-	awsCmd.AddCommand(securityhubCmd)
+	awsCmd.AddCommand(guardDutyCmd)
 }
