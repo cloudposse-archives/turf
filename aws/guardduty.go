@@ -87,10 +87,10 @@ func addGuardDutyMemberAccounts(client *guardduty.GuardDuty, detectorID string, 
 	result, err := client.CreateMembers(&input)
 	if err != nil {
 		logrus.Error(err)
-	}
-
-	if len(result.UnprocessedAccounts) > 0 {
-		logrus.Error(result)
+	} else {
+		if len(result.UnprocessedAccounts) > 0 {
+			logrus.Error(result)
+		}
 	}
 }
 
