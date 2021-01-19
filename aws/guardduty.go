@@ -46,10 +46,6 @@ func enableGuardDutyInManagementAccount(client *guardduty.GuardDuty) {
 	}
 }
 
-func isGuardDutyAdministratorAccountEnabled() bool {
-	return false
-}
-
 func containsGuardDutyAdminAccount(s []*guardduty.AdminAccount, e string) bool {
 	for _, a := range s {
 		if *a.AdminAccountId == e {
