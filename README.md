@@ -70,8 +70,13 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 ```sh
-    posse --help for help
+posse --help for help
 ```
+
+
+
+
+## Examples
 
 ### Delete all the VPCs in an AWS Account
 
@@ -81,14 +86,20 @@ through hoops, it's easier to delete to default VPCs. This task cannot be accomp
 is necessary.
 
 ```sh
-    posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
+posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
 ```
 
+### Deploy Guard Duty to AWS Organization
+```sh
+posse aws \
+  guardduty \
+  set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
+```
 
-
-
-## Examples
-
+examples: |-
 The utility can be called directly or as a Docker container.
 
 ### Build the Go program locally
@@ -112,11 +123,11 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/posse" *.go
 
 ```sh
 ./dist/bin/posse \
-        aws \
-        hub set-administrator-account \
-        -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-        -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-        --region us-west-2
+  aws \
+  hub set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
 ```
 
 ### Build the Docker image

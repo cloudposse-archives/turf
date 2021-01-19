@@ -46,10 +46,6 @@ func enableGuardDutyInManagementAccount(client *guardduty.GuardDuty) {
 	}
 }
 
-func isGuardDutyAdministratorAccountEnabled() bool {
-	return false
-}
-
 func containsGuardDutyAdminAccount(s []*guardduty.AdminAccount, e string) bool {
 	for _, a := range s {
 		if *a.AdminAccountId == e {
@@ -91,10 +87,10 @@ func addGuardDutyMemberAccounts(client *guardduty.GuardDuty, detectorID string, 
 	result, err := client.CreateMembers(&input)
 	if err != nil {
 		logrus.Error(err)
-	}
-
-	if len(result.UnprocessedAccounts) > 0 {
-		logrus.Error(result)
+	} else {
+		if len(result.UnprocessedAccounts) > 0 {
+			logrus.Error(result)
+		}
 	}
 }
 
@@ -102,6 +98,7 @@ func getDetectorIDForRegion(client *guardduty.GuardDuty) string {
 	detectors, err := client.ListDetectors(&guardduty.ListDetectorsInput{})
 	if err != nil {
 		logrus.Error(err)
+		return ""
 	}
 
 	if len(detectors.DetectorIds) == 0 {
