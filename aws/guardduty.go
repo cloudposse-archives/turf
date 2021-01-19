@@ -98,6 +98,7 @@ func getDetectorIDForRegion(client *guardduty.GuardDuty) string {
 	detectors, err := client.ListDetectors(&guardduty.ListDetectorsInput{})
 	if err != nil {
 		logrus.Error(err)
+		return ""
 	}
 
 	if len(detectors.DetectorIds) == 0 {
