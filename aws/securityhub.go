@@ -111,7 +111,7 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 	adminAcctSession := GetSession()
 	adminAccountID := GetAccountID(adminAcctSession, administratorAccountRole)
 
-	enabledRegions := GetEnabledRegions(rootRole)
+	enabledRegions := GetEnabledRegions(region, rootRole)
 
 	logrus.Info("Enabling organization-wide AWS Security Hub with the following config:")
 	logrus.Infof("  AWS Management Account %s", rootAccountID)

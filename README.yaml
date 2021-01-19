@@ -38,6 +38,7 @@ description: |-
   The utility provides the following functions:
     
   * Enable AWS Security Hub in for the AWS Organization and associate all member accounts
+  * Delete all of the default VPCs in an AWS account
 
   See `posse --help` for more details
 
@@ -50,17 +51,29 @@ related:
 usage: |-
 
   ```sh
-      posse --help for help
+  posse --help for help
+  ```
+
+examples: |-
+  ### Delete all the VPCs in an AWS Account
+
+  Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. AWS Security 
+  Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather than jumping 
+  through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, so this command 
+  is necessary.
+
+  ```sh
+  posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
   ```
 
   ### Deploy Guard Duty to AWS Organization
   ```sh
-    posse aws \
-      guardduty \
-      set-administrator-account \
-      -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-      -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-      --region us-west-2
+  posse aws \
+    guardduty \
+    set-administrator-account \
+    -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+    -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+    --region us-west-2
   ```
 
   examples: |-
@@ -87,11 +100,11 @@ usage: |-
 
   ```sh
   ./dist/bin/posse \
-          aws \
-          hub set-administrator-account \
-          -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-          -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-          --region us-west-2
+    aws \
+    hub set-administrator-account \
+    -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+    -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+    --region us-west-2
   ```
 
   ### Build the Docker image
@@ -108,7 +121,7 @@ usage: |-
 
   ```sh
   docker run -i --rm \
-          posse-cli
+    posse-cli
   ```
 
 # Contributors to this project

@@ -32,6 +32,7 @@ Command line utility for assisting with various automation tasks that are diffic
 The utility provides the following functions:
   
 * Enable AWS Security Hub in for the AWS Organization and associate all member accounts
+* Delete all of the default VPCs in an AWS account
 
 See `posse --help` for more details
 
@@ -69,17 +70,33 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 ```sh
-    posse --help for help
+posse --help for help
+```
+
+
+
+
+## Examples
+
+### Delete all the VPCs in an AWS Account
+
+Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. AWS Security 
+Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather than jumping 
+through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, so this command 
+is necessary.
+
+```sh
+posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
 ```
 
 ### Deploy Guard Duty to AWS Organization
 ```sh
-  posse aws \
-    guardduty \
-    set-administrator-account \
-    -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-    -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-    --region us-west-2
+posse aws \
+  guardduty \
+  set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
 ```
 
 examples: |-
@@ -106,11 +123,11 @@ CGO_ENABLED=0 go build -v -o "./dist/bin/posse" *.go
 
 ```sh
 ./dist/bin/posse \
-        aws \
-        hub set-administrator-account \
-        -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-        -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-        --region us-west-2
+  aws \
+  hub set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
 ```
 
 ### Build the Docker image
@@ -129,9 +146,6 @@ Run `posse-cli` in a Docker container with local ENV vars propagated into the co
 docker run -i --rm \
         posse-cli
 ```
-
-
-
 
 
 
