@@ -39,6 +39,7 @@ func (vpc Vpc) deleteInternetGateways() {
 	})
 	if err != nil {
 		logrus.Error(err)
+		return
 	}
 
 	if len(gws.InternetGateways) == 1 {
@@ -70,6 +71,7 @@ func (vpc Vpc) deleteSubnets() {
 	})
 	if err != nil {
 		logrus.Error(err)
+		return
 	}
 
 	if len(subnets.Subnets) > 0 {
@@ -96,6 +98,7 @@ func (vpc Vpc) deleteRouteTables() {
 	})
 	if err != nil {
 		logrus.Error(err)
+		return
 	}
 
 	if len(routeTables.RouteTables) > 0 {
@@ -127,6 +130,7 @@ func (vpc Vpc) deleteNACLs() {
 	})
 	if err != nil {
 		logrus.Error(err)
+		return
 	}
 
 	if len(nacls.NetworkAcls) > 0 {
@@ -155,6 +159,7 @@ func (vpc Vpc) deleteSecurityGroups() {
 	})
 	if err != nil {
 		logrus.Error(err)
+		return
 	}
 
 	if len(sgs.SecurityGroups) > 0 {
