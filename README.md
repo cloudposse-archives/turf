@@ -73,66 +73,17 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 posse --help for help
 ```
 
-
-
-
-## Examples
-
-### Delete all the VPCs in an AWS Account
-
-Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. AWS Security 
-Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather than jumping 
-through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, so this command 
-is necessary.
-
-```sh
-posse aws delete-default-vpcs --role arn:aws:iam::111111111111:role/acme-gbl-root-admin --delete
-```
-
-### Deploy Guard Duty to AWS Organization
-```sh
-posse aws \
-  guardduty \
-  set-administrator-account \
-  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-  --region us-west-2
-```
-
-examples: |-
 The utility can be called directly or as a Docker container.
 
 ### Build the Go program locally
-
 ```sh
 go get
 
 CGO_ENABLED=0 go build -v -o "./dist/bin/posse" *.go
 ```
 
-
-### Run locally
-
-```sh
-./dist/bin/posse
-```
-
-
-### Run locally with command-line arguments
-[run_locally_with_command_line_args.sh](examples/run_locally_with_command_line_args.sh)
-
-```sh
-./dist/bin/posse \
-  aws \
-  hub set-administrator-account \
-  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
-  --region us-west-2
-```
-
 ### Build the Docker image
 __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
-
 
 ```sh
 docker build --tag posse-cli  --no-cache=true .
@@ -144,7 +95,54 @@ Run `posse-cli` in a Docker container with local ENV vars propagated into the co
 
 ```sh
 docker run -i --rm \
-        posse-cli
+  posse-cli
+```
+
+
+
+
+## Examples
+
+
+### Delete all the VPCs in an AWS Account
+Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. AWS Security 
+Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather than jumping 
+through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, so this command 
+is necessary.
+
+```sh
+posse aws \
+  delete-default-vpcs \
+  --role arn:aws:iam::111111111111:role/acme-gbl-root-admin \
+  --delete
+```
+
+### Deploy Security Hub to AWS Organization
+The AWS Security Hub administrator account manages Security Hub membership for an organization. The organization 
+management account designates the Security Hub administrator account for the organization. The organization management 
+account can designate any account in the organization, including itself.
+
+```sh
+posse aws \
+  securityhub \
+  set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
+```
+
+### Deploy GuardDuty to AWS Organization
+When you use GuardDuty with an AWS Organizations organization, you can designate any account within the organization 
+to be the GuardDuty delegated administrator. Only the organization management account can designate GuardDuty 
+delegated administrators.
+
+```sh
+posse aws \
+  guardduty \
+  set-administrator-account \
+  -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+  -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+  --region us-west-2
 ```
 
 
