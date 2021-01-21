@@ -22,8 +22,10 @@ import (
 
 var region string
 var profile string
+var role string
 
 // These flags are used in the GuardDuty and Security Hub sub-commands
+const roleFlag string = "role"
 const adminAccountRoleFlag string = "administrator-account-role"
 const rootRoleFlag string = "root-role"
 

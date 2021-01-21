@@ -22,10 +22,8 @@ import (
 	"github.com/cloudposse/posse-cli/aws"
 )
 
-var role string
 var shouldDelete bool
 
-const roleFlag string = "role"
 const shouldDeleteFlag string = "delete"
 
 var deleteDefaultVPCsCmd = &cobra.Command{
@@ -43,6 +41,5 @@ var deleteDefaultVPCsCmd = &cobra.Command{
 func init() {
 	awsCmd.AddCommand(deleteDefaultVPCsCmd)
 
-	deleteDefaultVPCsCmd.Flags().StringVarP(&role, roleFlag, "r", "", "The ARN of a role to assume")
 	deleteDefaultVPCsCmd.Flags().BoolVarP(&shouldDelete, shouldDeleteFlag, "", false, "Flag to indicate if the delete should be run")
 }

@@ -17,17 +17,20 @@ limitations under the License.
 package aws
 
 import (
+	"fmt"
+
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/securityhub"
 	common "github.com/cloudposse/posse-cli/common/error"
 	"github.com/sirupsen/logrus"
 )
 
-// SecurityHub is a struct that represents an AWS SecurituHUb and attaches methods to perform various operations against
+// SecurityHub is a struct that represents an AWS Security Hub and attaches methods to perform various operations against
 // it
 type SecurityHub struct {
-	managementAccountClient *securityhub.SecurityHub
 	adminAccountClient      *securityhub.SecurityHub
+	currentAccountClient    *securityhub.SecurityHub
+	managementAccountClient *securityhub.SecurityHub
 }
 
 func (hub SecurityHub) securityHubAdminAccountAlreadyEnabled(accountID string) bool {
@@ -81,6 +84,93 @@ func (hub SecurityHub) addSecurityHubMemberAccounts(memberAccounts []string, adm
 	}
 }
 
+func (hub SecurityHub) disableControls(region string, accountID string, controls []string) {
+	for i := range controls {
+		currentControl := fmt.Sprintf(controls[i], region, accountID)
+
+		logrus.Infof("    disabling control %s", currentControl)
+
+		_, err := hub.currentAccountClient.UpdateStandardsControl(&securityhub.UpdateStandardsControlInput{
+			ControlStatus:       aws.String("DISABLED"),
+			DisabledReason:      aws.String("Global Resources are not collected in this region"),
+			StandardsControlArn: aws.String(currentControl),
+		})
+
+		if err != nil {
+			logrus.Error(err)
+		}
+	}
+}
+
+// Controls for AWS Foundational Security Best Practices v1.0.0
+func getFoundations100Controls(isGlobalCollectionRegion bool) []string {
+	controls := []string{}
+
+	if !isGlobalCollectionRegion {
+		controls = append(controls, []string{
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/Config.1",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.1",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.2",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.3",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.4",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.5",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.6",
+			"arn:aws:securityhub:%s:%s:control/aws-foundational-security-best-practices/v/1.0.0/IAM.7",
+		}...)
+	}
+
+	return controls
+}
+
+// Controls for CIS AWS Foundations Benchmark v1.2.0
+func getCIS120Controls(isGlobalCollectionRegion bool, isCloudTrailAccount bool) []string {
+	controls := []string{}
+
+	if !isGlobalCollectionRegion {
+		controls = append(controls, []string{
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.2",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.3",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.4",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.5",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.6",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.7",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.8",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.9",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.10",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.11",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.12",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.13",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.14",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.16",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.20",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.22",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/2.5",
+		}...)
+	}
+
+	if !isCloudTrailAccount {
+		controls = append(controls, []string{
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/2.7",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.1",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.2",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.3",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.4",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.5",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.6",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.7",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.8",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.9",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.10",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.11",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.12",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.13",
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.14",
+		}...)
+	}
+
+	return controls
+}
+
 func getSecurityHubClient(region string, role string) *securityhub.SecurityHub {
 	sess := GetSession()
 	creds := GetCreds(sess, role)
@@ -131,8 +221,8 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 		adminAccountClient := getSecurityHubClient(currentRegion, administratorAccountRole)
 
 		hub := SecurityHub{
-			managementAccountClient: managementAccountClient,
 			adminAccountClient:      adminAccountClient,
+			managementAccountClient: managementAccountClient,
 		}
 
 		if !hub.securityHubAdminAccountAlreadyEnabled(adminAccountID) {
@@ -146,6 +236,59 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 		hub.addSecurityHubMemberAccounts(memberAccounts, adminAccountID)
 	}
 	logrus.Infof("Organization-wide AWS Security Hub complete")
+
+	return nil
+}
+
+func validateRegion(enabledRegions []string, region string) bool {
+	for i := range enabledRegions {
+		if enabledRegions[i] == region {
+			return true
+		}
+	}
+	return false
+}
+
+// DisableSecurityHubGlobalResourceControls disables Security Hub controls related to Global Resources in regions that
+// aren't collecting Global Resources. It also disables CloudTrail related controls in accounts that aren't the central
+// CloudTrail account.
+//
+// https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-cis-to-disable.html
+// https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-fsbp-to-disable.html
+func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, role string, isCloudTrailAccount bool) error {
+	session := GetSession()
+	accountID := GetAccountID(session, role)
+	enabledRegions := GetEnabledRegions("us-east-1", role)
+
+	if !validateRegion(enabledRegions, globalCollectionRegion) {
+		return fmt.Errorf("%s is not a valid enabled region in this account", globalCollectionRegion)
+	}
+
+	logrus.Infof("Disabling Global Resource controls for all regions excluding %s for account %s", globalCollectionRegion, accountID)
+
+	for r := range enabledRegions {
+		currentRegion := enabledRegions[r]
+
+		currentAccountClient := getSecurityHubClient(currentRegion, role)
+
+		hub := SecurityHub{
+			currentAccountClient: currentAccountClient,
+		}
+
+		isGlobalCollectionRegion := currentRegion != globalCollectionRegion
+
+		if isGlobalCollectionRegion {
+			logrus.Infof("  processing global collection region %s", currentRegion)
+		} else {
+			logrus.Infof("  processing region %s", currentRegion)
+		}
+
+		foundations100Controls := getFoundations100Controls(isGlobalCollectionRegion)
+		cis120Controls := getCIS120Controls(isGlobalCollectionRegion, isCloudTrailAccount)
+
+		hub.disableControls(currentRegion, accountID, foundations100Controls)
+		hub.disableControls(currentRegion, accountID, cis120Controls)
+	}
 
 	return nil
 }
