@@ -21,7 +21,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/securityhub"
-	common "github.com/cloudposse/posse-cli/common/error"
+	common "github.com/cloudposse/turf/common/error"
 	"github.com/sirupsen/logrus"
 )
 

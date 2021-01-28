@@ -17,7 +17,7 @@ limitations under the License.
 package main
 
 import (
-	"github.com/cloudposse/posse-cli/cmd"
+	"github.com/cloudposse/turf/cmd"
 	"github.com/sirupsen/logrus"
 )
 

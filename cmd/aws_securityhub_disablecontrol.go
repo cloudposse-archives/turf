@@ -17,7 +17,7 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/cloudposse/posse-cli/aws"
+	"github.com/cloudposse/turf/aws"
 	"github.com/spf13/cobra"
 )
 

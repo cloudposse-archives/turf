@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package turf
 
 import (
 	"fmt"
@@ -22,11 +22,11 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/cloudposse/posse-cli/compare"
+	"github.com/cloudposse/turf/compare"
 	"github.com/spf13/cast"
 )
 
-// Version represents the posse build version.
+// Version represents the turf build version.
 type Version struct {
 	// Major and minor version.
 	Number float32
@@ -34,7 +34,7 @@ type Version struct {
 	// Increment this for bug releases
 	PatchLevel int
 
-	// PosseVersionSuffix is the suffix used in the posse version string.
+	// PosseVersionSuffix is the suffix used in the turf version string.
 	// It will be blank for release versions.
 	Suffix string
 }
@@ -111,24 +111,24 @@ func (v Version) ReleaseVersion() Version {
 	return v
 }
 
-// Next returns the next posse release version.
+// Next returns the next turf release version.
 func (v Version) Next() Version {
 	return Version{Number: v.Number + 0.01}
 }
 
-// Prev returns the previous posse release version.
+// Prev returns the previous turf release version.
 func (v Version) Prev() Version {
 	return Version{Number: v.Number - 0.01}
 }
 
-// NextPatchLevel returns the next patch/bugfix posse version.
-// This will be a patch increment on the previous posse version.
+// NextPatchLevel returns the next patch/bugfix turf version.
+// This will be a patch increment on the previous turf version.
 func (v Version) NextPatchLevel(level int) Version {
 	return Version{Number: v.Number - 0.01, PatchLevel: level}
 }
 
 // BuildVersionString creates a version string. This is what you see when
-// running "posse version".
+// running "turf version".
 func BuildVersionString() string {
 	program := "Cloud Posse Automation Helper"
 
@@ -154,7 +154,7 @@ func version(version float32, patchVersion int, suffix string) string {
 	return fmt.Sprintf("%.1f%s", version, suffix)
 }
 
-// CompareVersion compares the given version string or number against the running posse version. It returns -1 if the
+// CompareVersion compares the given version string or number against the running turf version. It returns -1 if the
 // given version is less than, 0 if equal and 1 if greater than the running version.
 func CompareVersion(version interface{}) int {
 	return compareVersionsWithSuffix(CurrentVersion.Number, CurrentVersion.PatchLevel, CurrentVersion.Suffix, version)
@@ -233,6 +233,7 @@ func compareFloatVersions(version float32, v float32) int {
 	return 1
 }
 
+// GoMinorVersion returns the minor version of turf
 func GoMinorVersion() int {
 	return goMinorVersion(runtime.Version())
 }

@@ -22,7 +22,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/stscreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/sts"
-	common "github.com/cloudposse/posse-cli/common/error"
+	common "github.com/cloudposse/turf/common/error"
 )
 
 func getStsClient(sess *session.Session) *sts.STS {

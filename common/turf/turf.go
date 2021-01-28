@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package turf
 
 var (
 	// commitHash contains the current Git revision. Use make to build to make sure this gets set.
@@ -24,7 +24,7 @@ var (
 	buildDate string
 )
 
-// Info contains information about the current posse environment
+// Info contains information about the current turf environment
 type Info struct {
 	CommitHash string
 	BuildDate  string
@@ -35,7 +35,7 @@ func (i Info) Version() VersionString {
 	return CurrentVersion.Version()
 }
 
-// NewInfo creates a new posse Info object.
+// NewInfo creates a new turf Info object.
 func NewInfo() Info {
 	return Info{
 		CommitHash: commitHash,

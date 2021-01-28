@@ -19,7 +19,7 @@ package aws
 import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/organizations"
-	common "github.com/cloudposse/posse-cli/common/error"
+	common "github.com/cloudposse/turf/common/error"
 )
 
 func getOrgClient(role string) *organizations.Organizations {

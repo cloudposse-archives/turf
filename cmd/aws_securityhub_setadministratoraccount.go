@@ -19,7 +19,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/cloudposse/posse-cli/aws"
+	"github.com/cloudposse/turf/aws"
 )
 
 var securityHubAddMembersCmd = &cobra.Command{

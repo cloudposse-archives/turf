@@ -35,12 +35,12 @@ import (
 )
 
 const (
-	binName      = "posse"
-	packageName  = "github.com/cloudposse/posse-cli"
-	noGitLdflags = "-X $PACKAGE/common/posse.buildDate=$BUILD_DATE"
+	binName      = "turf"
+	packageName  = "github.com/cloudposse/turf"
+	noGitLdflags = "-X $PACKAGE/common/turf.buildDate=$BUILD_DATE"
 )
 
-var ldflags = "-X $PACKAGE/common/posse.commitHash=$COMMIT_HASH -X $PACKAGE/common/posse.buildDate=$BUILD_DATE"
+var ldflags = "-X $PACKAGE/common/turf.commitHash=$COMMIT_HASH -X $PACKAGE/common/turf.buildDate=$BUILD_DATE"
 
 // allow user to override go executable by running as GOEXE=xxx make ... on unix-like systems
 var goexe = "go"
@@ -60,22 +60,22 @@ func runWith(env map[string]string, cmd string, inArgs ...interface{}) error {
 	return sh.RunWith(env, cmd, s...)
 }
 
-// Build posse binary
-func Posse() error {
+// Build turf binary
+func Turf() error {
 	return runWith(flagEnv(), goexe, "build", "-ldflags", ldflags, buildFlags(), "-o", binName, "-tags", buildTags(), packageName)
 }
 
-// Build posse binary with race detector enabled
+// Build turf binary with race detector enabled
 func PosseRace() error {
 	return runWith(flagEnv(), goexe, "build", "-race", "-ldflags", ldflags, buildFlags(), "-o", binName, "-tags", buildTags(), packageName)
 }
 
-// Install posse binary
+// Install turf binary
 func Install() error {
 	return runWith(flagEnv(), goexe, "install", "-ldflags", ldflags, buildFlags(), "-tags", buildTags(), packageName)
 }
 
-// Uninstall posse binary
+// Uninstall turf binary
 func Uninstall() error {
 	return sh.Run(goexe, "clean", "-i", packageName)
 }
@@ -94,10 +94,10 @@ func GenDocsHelper() error {
 	return runCmd(flagEnv(), goexe, "run", "-tags", buildTags(), "main.go", "gen", "docshelper")
 }
 
-// Build posse without git info
+// Build turf without git info
 func PosseNoGitInfo() error {
 	ldflags = noGitLdflags
-	return Posse()
+	return Turf()
 }
 
 // Run tests and linters
@@ -154,7 +154,7 @@ func Fmt() error {
 	if !isGoLatest() {
 		return nil
 	}
-	pkgs, err := possePackages()
+	pkgs, err := turfPackages()
 	if err != nil {
 		return err
 	}
@@ -191,12 +191,12 @@ func Fmt() error {
 }
 
 var (
-	pkgPrefixLen = len("github.com/cloudposse/posse-cli")
+	pkgPrefixLen = len("github.com/cloudposse/turf")
 	pkgs         []string
 	pkgsInit     sync.Once
 )
 
-func possePackages() ([]string, error) {
+func turfPackages() ([]string, error) {
 	var err error
 	pkgsInit.Do(func() {
 		var s string
@@ -214,7 +214,7 @@ func possePackages() ([]string, error) {
 
 // Run golint linter
 func Lint() error {
-	pkgs, err := possePackages()
+	pkgs, err := turfPackages()
 	if err != nil {
 		return err
 	}
@@ -255,7 +255,7 @@ func TestCoverHTML() error {
 	if _, err := f.Write([]byte("mode: count")); err != nil {
 		return err
 	}
-	pkgs, err := possePackages()
+	pkgs, err := turfPackages()
 	if err != nil {
 		return err
 	}

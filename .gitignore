@@ -15,3 +15,7 @@
 vendor/
 .build-harness
 build-harness/
+
+# Binaries
+turf
+!turf/

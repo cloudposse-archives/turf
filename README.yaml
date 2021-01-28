@@ -5,7 +5,7 @@
 #
 
 # Name of this project
-name: posse-cli
+name: turf
 
 # Logo for this project
 #logo: docs/logo.png
@@ -14,19 +14,19 @@ name: posse-cli
 license: "APACHE2"
 
 # Canonical GitHub repo
-github_repo: cloudposse/posse-cli
+github_repo: cloudposse/turf
 
 # Badges to display
 badges:
   - name: "Build Status"
-    image: "https://github.com/cloudposse/posse-cli/workflows/go/badge.svg?branch=master"
-    url: "https://github.com/cloudposse/posse-cli/actions"
+    image: "https://github.com/cloudposse/turf/workflows/go/badge.svg?branch=master"
+    url: "https://github.com/cloudposse/turf/actions"
   - name: "Docker Status"
-    image: "https://github.com/cloudposse/posse-cli/workflows/docker/badge.svg?branch=master"
-    url: "https://github.com/cloudposse/posse-cli/actions"
+    image: "https://github.com/cloudposse/turf/workflows/docker/badge.svg?branch=master"
+    url: "https://github.com/cloudposse/turf/actions"
   - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/posse-cli.svg"
-    url: "https://github.com/cloudposse/posse-cli/releases/latest"
+    image: "https://img.shields.io/github/release/cloudposse/turf.svg"
+    url: "https://github.com/cloudposse/turf/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
@@ -40,7 +40,7 @@ description: |-
   * Enable AWS Security Hub in for the AWS Organization and associate all member accounts
   * Delete all of the default VPCs in an AWS account
 
-  See `posse --help` for more details
+  See `turf --help` for more details
 
 related:
   - name: "terraform-aws-security-hub"
@@ -51,7 +51,7 @@ related:
 usage: |-
 
   ```sh
-  posse --help for help
+  turf --help for help
   ```
 
   The utility can be called directly or as a Docker container.
@@ -60,23 +60,23 @@ usage: |-
   ```sh
   go get
 
-  CGO_ENABLED=0 go build -v -o "./dist/bin/posse" *.go
+  CGO_ENABLED=0 go build -v -o "./dist/bin/turf" *.go
   ```
 
   ### Build the Docker image
   __NOTE__: it will download all `Go` dependencies and then build the program inside the container (see [`Dockerfile`](Dockerfile))
 
   ```sh
-  docker build --tag posse-cli  --no-cache=true .
+  docker build --tag turf  --no-cache=true .
   ```
 
   ### Run with Docker
-  Run `posse-cli` in a Docker container with local ENV vars propagated into the container's environment.
+  Run `turf` in a Docker container with local ENV vars propagated into the container's environment.
   [run_docker_with_local_env_vars.sh](examples/run_docker_with_local_env_vars.sh)
 
   ```sh
   docker run -i --rm \
-    posse-cli
+    turf
   ```
 
 examples: |-
@@ -88,7 +88,7 @@ examples: |-
   is necessary.
 
   ```sh
-  posse aws \
+  turf aws \
     delete-default-vpcs \
     --role arn:aws:iam::111111111111:role/acme-gbl-root-admin \
     --delete
@@ -100,7 +100,7 @@ examples: |-
   account can designate any account in the organization, including itself.
 
   ```sh
-  posse aws \
+  turf aws \
     securityhub \
     set-administrator-account \
     --administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
@@ -117,7 +117,7 @@ examples: |-
   https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-fsbp-to-disable.html
 
   ```sh
-  posse aws \
+  turf aws \
     securityhub \
     disable-global-controls \
     --role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
@@ -125,7 +125,7 @@ examples: |-
   ```
 
   ```sh
-  posse aws \
+  turf aws \
     securityhub \
     disable-global-controls \
     --role arn:aws:iam::111111111111:role/acme-gbl-audit-admin \
@@ -139,7 +139,7 @@ examples: |-
   delegated administrators.
 
   ```sh
-  posse aws \
+  turf aws \
     guardduty \
     set-administrator-account \
     -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
