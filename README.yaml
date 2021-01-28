@@ -103,9 +103,34 @@ examples: |-
   posse aws \
     securityhub \
     set-administrator-account \
-    -administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
-    -root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
+    --administrator-account-role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+    --root-role arn:aws:iam::222222222222:role/acme-gbl-root-admin \
     --region us-west-2
+  ```
+
+  ### Disable Security Hub Controls
+  DisableSecurityHubGlobalResourceControls disables Security Hub controls related to Global Resources in regions that
+  aren't collecting Global Resources. It also disables CloudTrail related controls in accounts that aren't the central
+  CloudTrail account.
+
+  https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-cis-to-disable.html
+  https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-fsbp-to-disable.html
+
+  ```sh
+  posse aws \
+    securityhub \
+    disable-global-controls \
+    --role arn:aws:iam::111111111111:role/acme-gbl-security-admin \
+    --global-collector-region us-west-2
+  ```
+
+  ```sh
+  posse aws \
+    securityhub \
+    disable-global-controls \
+    --role arn:aws:iam::111111111111:role/acme-gbl-audit-admin \
+    --global-collector-region us-west-2 \ 
+    --cloud-trail-account
   ```
 
   ### Deploy GuardDuty to AWS Organization
