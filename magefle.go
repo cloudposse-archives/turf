@@ -61,7 +61,7 @@ func runWith(env map[string]string, cmd string, inArgs ...interface{}) error {
 }
 
 // Build turf binary
-func Posse() error {
+func Turf() error {
 	return runWith(flagEnv(), goexe, "build", "-ldflags", ldflags, buildFlags(), "-o", binName, "-tags", buildTags(), packageName)
 }
 
@@ -97,7 +97,7 @@ func GenDocsHelper() error {
 // Build turf without git info
 func PosseNoGitInfo() error {
 	ldflags = noGitLdflags
-	return Posse()
+	return Turf()
 }
 
 // Run tests and linters
