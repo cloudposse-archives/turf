@@ -30,12 +30,8 @@ var cfgFile string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "posse",
+	Use:   "turf",
 	Short: "A cli automation helper by cloudposse",
-	Long:  `Fill in long description`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -54,7 +50,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.posse-cli.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.turf.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -74,9 +70,9 @@ func initConfig() {
 			os.Exit(1)
 		}
 
-		// Search config in home directory with name ".posse-cli" (without extension).
+		// Search config in home directory with name ".turf" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigName(".posse-cli")
+		viper.SetConfigName(".turf")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

@@ -17,22 +17,22 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/cloudposse/posse-cli/common/posse"
+	"github.com/cloudposse/turf/common/turf"
 	"github.com/spf13/cobra"
 	jww "github.com/spf13/jwalterweatherman"
 )
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Print the version number of posse",
-	Long:  "Print the version number of posse",
+	Short: "Print the version number of turf",
+	Long:  "Print the version number of turf",
 	Run: func(cmd *cobra.Command, args []string) {
 		printPosseVersion()
 	},
 }
 
 func printPosseVersion() {
-	jww.FEEDBACK.Println(posse.BuildVersionString())
+	jww.FEEDBACK.Println(turf.BuildVersionString())
 }
 
 func init() {

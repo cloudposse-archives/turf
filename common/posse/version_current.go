@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package posse
+package turf
 
 // CurrentVersion represents the current build version.
 var CurrentVersion = Version{

@@ -1,4 +1,4 @@
-module github.com/cloudposse/posse-cli
+module github.com/cloudposse/turf
 
 go 1.15
 
