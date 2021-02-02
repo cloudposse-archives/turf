@@ -17,22 +17,24 @@ limitations under the License.
 package cmd
 
 import (
-	"github.com/cloudposse/turf/common/turf"
 	"github.com/spf13/cobra"
 	jww "github.com/spf13/jwalterweatherman"
 )
+
+// Version is the application's version in SemVer format
+var Version = "v0.0.0-development"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Print the version number of turf",
 	Long:  "Print the version number of turf",
 	Run: func(cmd *cobra.Command, args []string) {
-		printPosseVersion()
+		printTurfVersion()
 	},
 }
 
-func printPosseVersion() {
-	jww.FEEDBACK.Println(turf.BuildVersionString())
+func printTurfVersion() {
+	jww.FEEDBACK.Println(Version)
 }
 
 func init() {

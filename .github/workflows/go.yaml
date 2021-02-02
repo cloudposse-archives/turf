@@ -14,15 +14,25 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
 
+      - name: Get the version
+        id: get_version
+        run: |
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+          else
+            echo ::set-output name=VERSION::${GITHUB_SHA}
+          fi
+
       - name: "Build Go binaries"
-        uses: cloudposse/actions/go/build@0.24.1
+        uses: cloudposse/actions/go/build@0.28.0
         env:
           GO111MODULE: on
           # Architectures to build for
           GOX_OSARCH: >-
-            windows/386 windows/amd64 freebsd/arm netbsd/386 netbsd/amd64 netbsd/arm linux/s390x linux/arm darwin/386
-            darwin/amd64 linux/386 linux/amd64 freebsd/amd64 freebsd/386 openbsd/386 openbsd/amd64
+            windows/386 windows/amd64 freebsd/arm netbsd/386 netbsd/amd64 netbsd/arm linux/s390x linux/arm darwin/amd64
+            linux/386 linux/amd64 freebsd/amd64 freebsd/386 openbsd/386 openbsd/amd64
           OUTPUT_PATH: ${{ github.workspace }}/release/turf_
+          LDFLAGS: "-X 'github.com/cloudposse/turf/cmd.Version=${{ steps.get_version.outputs.VERSION }}'"
 
       - name: "Upload artifacts to GitHub"
         uses: actions/upload-artifact@v2
@@ -32,7 +42,7 @@ jobs:
 
       - name: "Attach artifacts to GitHub Release"
         if: ${{ github.event_name == 'release' }}
-        uses: cloudposse/actions/github/release-assets@0.24.1
+        uses: cloudposse/actions/github/release-assets@0.28.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           INPUT_PATH: ${{ github.workspace }}/release/turf_*
