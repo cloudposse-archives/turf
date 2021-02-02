@@ -1,5 +1,5 @@
-ARG VERSION=development
 FROM golang:1.15-buster as builder
+ARG VERSION=development
 ENV GO111MODULE=on
 ENV CGO_ENABLED=0
 WORKDIR /usr/src/
