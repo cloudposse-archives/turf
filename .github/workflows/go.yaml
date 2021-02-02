@@ -19,8 +19,8 @@ jobs:
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
             echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
-          elif [[ $GITHUB_REF == refs/pull/* ]]; then
-            echo ::set-output name=VERSION::pr-${{ github.event.pull_request.number }}-merge
+          else
+            echo ::set-output name=VERSION::${GITHUB_SHA}
           fi
 
       - name: "Build Go binaries"
