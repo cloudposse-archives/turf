@@ -29,7 +29,7 @@ jobs:
           GO111MODULE: on
           # Architectures to build for
           GOX_OSARCH: >-
-            windows/386 windows/amd64 freebsd/arm netbsd/386 netbsd/amd64 netbsd/arm linux/s390x linux/arm  darwin/amd64
+            windows/386 windows/amd64 freebsd/arm netbsd/386 netbsd/amd64 netbsd/arm linux/s390x linux/arm darwin/amd64
             linux/386 linux/amd64 freebsd/amd64 freebsd/386 openbsd/386 openbsd/amd64
           OUTPUT_PATH: ${{ github.workspace }}/release/turf_
           LDFLAGS: "-X 'github.com/cloudposse/turf/cmd.Version=${{ steps.get_version.outputs.VERSION }}'"
