@@ -19,10 +19,11 @@ github_repo: cloudposse/turf
 # Badges to display
 badges:
   - name: "Build Status"
-    image: "https://github.com/cloudposse/turf/workflows/go/badge.svg?branch=master"
+
+    image: "https://github.com/cloudposse/turf/workflows/go/badge.svg"
     url: "https://github.com/cloudposse/turf/actions"
   - name: "Docker Status"
-    image: "https://github.com/cloudposse/turf/workflows/docker/badge.svg?branch=master"
+    image: "https://github.com/cloudposse/turf/workflows/docker/badge.svg"
     url: "https://github.com/cloudposse/turf/actions"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/turf.svg"

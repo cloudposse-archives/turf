@@ -1,5 +1,5 @@
 <!-- markdownlint-disable -->
-# turf [![Build Status](https://github.com/cloudposse/turf/workflows/go/badge.svg?branch=master)](https://github.com/cloudposse/turf/actions) [![Docker Status](https://github.com/cloudposse/turf/workflows/docker/badge.svg?branch=master)](https://github.com/cloudposse/turf/actions) [![Latest Release](https://img.shields.io/github/release/cloudposse/turf.svg)](https://github.com/cloudposse/turf/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+# turf [![Build Status](https://github.com/cloudposse/turf/workflows/go/badge.svg)](https://github.com/cloudposse/turf/actions) [![Docker Status](https://github.com/cloudposse/turf/workflows/docker/badge.svg)](https://github.com/cloudposse/turf/actions) [![Latest Release](https://img.shields.io/github/release/cloudposse/turf.svg)](https://github.com/cloudposse/turf/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 <!-- markdownlint-restore -->
 
 [![README Header][readme_header_img]][readme_header_link]
