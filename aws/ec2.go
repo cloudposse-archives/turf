@@ -31,7 +31,7 @@ func getEC2Client(region string, role string) *ec2.EC2 {
 
 func getDefaultVPC(client *ec2.EC2) string {
 	filters := []*ec2.Filter{
-		&ec2.Filter{
+		{
 			Name:   aws.String("isDefault"),
 			Values: []*string{aws.String("true")},
 		},
