@@ -31,7 +31,7 @@ func getEC2Client(region string, role string) *ec2.EC2 {
 
 func getDefaultVPC(client *ec2.EC2) string {
 	filters := []*ec2.Filter{
-		&ec2.Filter{
+		{
 			Name:   aws.String("isDefault"),
 			Values: []*string{aws.String("true")},
 		},
@@ -55,7 +55,12 @@ func GetEnabledRegions(region string, role string) []string {
 
 	regionsList := make([]string, 0)
 	for i := range regions.Regions {
-		regionsList = append(regionsList, *regions.Regions[i].RegionName)
+		// https://github.com/aws/aws-sdk-go/issues/3805
+		// exclude the `ap-northeast-3` region until the sdk is updated to support its endpoints
+		currentRegion := *regions.Regions[i].RegionName
+		if currentRegion != "ap-northeast-3" {
+			regionsList = append(regionsList, *regions.Regions[i].RegionName)
+		}
 	}
 
 	return regionsList

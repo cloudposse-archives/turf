@@ -86,7 +86,8 @@ examples: |-
   Best-practices call for not using the default VPC, but rather, creating a new set of VPCs as necessary. AWS Security 
   Hub will flag the default VPCs as non-compliant if they aren't configured with best-practices. Rather than jumping 
   through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, so this command 
-  is necessary.
+  is necessary. Please note that this command will also delete all of the children resources of the VPC, including 
+  Subnets, Route Tables, NACLs and Internet Gateways.
 
   ```sh
   turf aws \

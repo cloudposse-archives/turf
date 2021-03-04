@@ -31,7 +31,7 @@ type Vpc struct {
 func (vpc Vpc) deleteInternetGateways() {
 	gws, err := vpc.client.DescribeInternetGateways(&ec2.DescribeInternetGatewaysInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("attachment.vpc-id"),
 				Values: []*string{aws.String(vpc.VpcID)},
 			},
@@ -63,7 +63,7 @@ func (vpc Vpc) deleteInternetGateways() {
 func (vpc Vpc) deleteSubnets() {
 	subnets, err := vpc.client.DescribeSubnets(&ec2.DescribeSubnetsInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("vpc-id"),
 				Values: []*string{aws.String(vpc.VpcID)},
 			},
@@ -90,7 +90,7 @@ func (vpc Vpc) deleteSubnets() {
 func (vpc Vpc) deleteRouteTables() {
 	routeTables, err := vpc.client.DescribeRouteTables(&ec2.DescribeRouteTablesInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("vpc-id"),
 				Values: []*string{aws.String(vpc.VpcID)},
 			},
@@ -122,7 +122,7 @@ func (vpc Vpc) deleteRouteTables() {
 func (vpc Vpc) deleteNACLs() {
 	nacls, err := vpc.client.DescribeNetworkAcls(&ec2.DescribeNetworkAclsInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("vpc-id"),
 				Values: []*string{aws.String(vpc.VpcID)},
 			},
