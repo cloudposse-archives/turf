@@ -23,8 +23,10 @@ import (
 )
 
 var shouldDelete bool
+var isPrivileged bool
 
 const shouldDeleteFlag string = "delete"
+const isPrivilegedFlag string = "privileged"
 
 var deleteDefaultVPCsCmd = &cobra.Command{
 	Use:   "delete-default-vpcs",
@@ -34,12 +36,14 @@ var deleteDefaultVPCsCmd = &cobra.Command{
 	than jumping through hoops, it's easier to delete to default VPCs. This task cannot be accomplished with terraform, 
 	so this command is necessary.`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return aws.DeleteDefaultVPCs(region, role, shouldDelete)
+		return aws.DeleteDefaultVPCs(region, role, shouldDelete, isPrivileged)
 	},
 }
 
 func init() {
 	awsCmd.AddCommand(deleteDefaultVPCsCmd)
 
+	deleteDefaultVPCsCmd.Flags().StringVar(&role, roleFlag, "", "The ARN of a role to assume")
+	deleteDefaultVPCsCmd.Flags().BoolVarP(&isPrivileged, isPrivilegedFlag, "", false, "Flag to indicate if the session already has rights to perform the actions in AWS")
 	deleteDefaultVPCsCmd.Flags().BoolVarP(&shouldDelete, shouldDeleteFlag, "", false, "Flag to indicate if the delete should be run")
 }

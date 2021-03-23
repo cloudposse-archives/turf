@@ -23,7 +23,12 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func getEC2Client(region string, role string) *ec2.EC2 {
+func getEC2Client(region string) *ec2.EC2 {
+	sess := GetSession()
+	return ec2.New(sess, &aws.Config{Region: &region})
+}
+
+func getEC2ClientWithRole(region string, role string) *ec2.EC2 {
 	sess := GetSession()
 	creds := GetCreds(sess, role)
 	return ec2.New(sess, &aws.Config{Credentials: creds, Region: &region})
@@ -48,8 +53,12 @@ func getDefaultVPC(client *ec2.EC2) string {
 }
 
 // GetEnabledRegions provides a list of AWS Regions that are enabled
-func GetEnabledRegions(region string, role string) []string {
-	client := getEC2Client(region, role)
+func GetEnabledRegions(region string, role string, isPrivileged bool) []string {
+	client := getEC2Client(region)
+	if !isPrivileged {
+		client = getEC2ClientWithRole(region, role)
+	}
+
 	regions, err := client.DescribeRegions(&ec2.DescribeRegionsInput{AllRegions: aws.Bool(false)})
 	common.AssertErrorNil(err)
 
