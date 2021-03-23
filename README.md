@@ -118,6 +118,15 @@ turf aws \
   --delete
 ```
 
+You can also run using the current AWS credentials (rather than assume a role):
+
+```sh
+turf aws \
+  delete-default-vpcs \
+  --privileged \
+  --delete
+```
+
 ### Deploy Security Hub to AWS Organization
 The AWS Security Hub administrator account manages Security Hub membership for an organization. The organization 
 management account designates the Security Hub administrator account for the organization. The organization management 
