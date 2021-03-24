@@ -204,7 +204,7 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 	adminAcctSession := GetSession()
 	adminAccountID := GetAccountID(adminAcctSession, administratorAccountRole)
 
-	enabledRegions := GetEnabledRegions(region, rootRole)
+	enabledRegions := GetEnabledRegions(region, rootRole, false)
 
 	logrus.Info("Enabling organization-wide AWS Security Hub with the following config:")
 	logrus.Infof("  AWS Management Account %s", rootAccountID)
@@ -258,7 +258,7 @@ func validateRegion(enabledRegions []string, region string) bool {
 func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, role string, isCloudTrailAccount bool) error {
 	session := GetSession()
 	accountID := GetAccountID(session, role)
-	enabledRegions := GetEnabledRegions("us-east-1", role)
+	enabledRegions := GetEnabledRegions("us-east-1", role, false)
 
 	if !validateRegion(enabledRegions, globalCollectionRegion) {
 		return fmt.Errorf("%s is not a valid enabled region in this account", globalCollectionRegion)

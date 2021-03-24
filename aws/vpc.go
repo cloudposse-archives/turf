@@ -151,7 +151,7 @@ func (vpc Vpc) deleteNACLs() {
 func (vpc Vpc) deleteSecurityGroups() {
 	sgs, err := vpc.client.DescribeSecurityGroups(&ec2.DescribeSecurityGroupsInput{
 		Filters: []*ec2.Filter{
-			&ec2.Filter{
+			{
 				Name:   aws.String("vpc-id"),
 				Values: []*string{aws.String(vpc.VpcID)},
 			},
@@ -195,8 +195,8 @@ func (vpc Vpc) delete() {
 }
 
 // DeleteDefaultVPCs deletes all of the default VPCs in all regions of an account
-func DeleteDefaultVPCs(region string, role string, deleteFlag bool) error {
-	enabledRegions := GetEnabledRegions(region, role)
+func DeleteDefaultVPCs(region string, role string, deleteFlag bool, isPrivileged bool) error {
+	enabledRegions := GetEnabledRegions(region, role, isPrivileged)
 
 	logrus.Infof("Deleting default VPCs")
 
@@ -210,7 +210,11 @@ func DeleteDefaultVPCs(region string, role string, deleteFlag bool) error {
 		currentRegion := enabledRegions[r]
 		logrus.Infof("  Processing region %s", currentRegion)
 
-		client := getEC2Client(currentRegion, role)
+		client := getEC2Client(currentRegion)
+		if !isPrivileged {
+			client = getEC2ClientWithRole(currentRegion, role)
+		}
+
 		vpc := getDefaultVPC(client)
 		if vpc != "" {
 			logrus.Infof("    found %s", vpc)
