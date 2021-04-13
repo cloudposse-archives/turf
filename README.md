@@ -118,7 +118,7 @@ turf aws \
   --delete
 ```
 
-You can also run using the current AWS credentials (rather than assume a role):
+You can also run using the current AWS credentials (rather than assuming a role):
 
 ```sh
 turf aws \
@@ -165,6 +165,25 @@ turf aws \
   --global-collector-region us-west-2 \ 
   --cloud-trail-account
 ```
+
+You can also run using the current AWS credentials (rather than assuming a role):
+
+  ```sh
+  turf aws \
+    securityhub \
+    disable-global-controls \
+    --privileged \
+    --global-collector-region us-west-2
+  ```
+
+  ```sh
+  turf aws \
+    securityhub \
+    disable-global-controls \
+    --privileged \
+    --global-collector-region us-west-2 \ 
+    --cloud-trail-account
+  ```
 
 ### Deploy GuardDuty to AWS Organization
 When you use GuardDuty with an AWS Organizations organization, you can designate any account within the organization 

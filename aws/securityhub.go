@@ -17,6 +17,7 @@ limitations under the License.
 package aws
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/aws/aws-sdk-go/aws"
@@ -171,7 +172,14 @@ func getCIS120Controls(isGlobalCollectionRegion bool, isCloudTrailAccount bool) 
 	return controls
 }
 
-func getSecurityHubClient(region string, role string) *securityhub.SecurityHub {
+func getSecurityHubClient(region string) *securityhub.SecurityHub {
+	sess := GetSession()
+	securityHubClient := securityhub.New(sess, &aws.Config{Region: &region})
+
+	return securityHubClient
+}
+
+func getSecurityHubClientWithRole(region string, role string) *securityhub.SecurityHub {
 	sess := GetSession()
 	creds := GetCreds(sess, role)
 	securityHubClient := securityhub.New(sess, &aws.Config{Credentials: creds, Region: &region})
@@ -217,8 +225,8 @@ func EnableSecurityHubAdministratorAccount(region string, administratorAccountRo
 		currentRegion := enabledRegions[r]
 		logrus.Infof("  Processing region %s", currentRegion)
 
-		managementAccountClient := getSecurityHubClient(currentRegion, rootRole)
-		adminAccountClient := getSecurityHubClient(currentRegion, administratorAccountRole)
+		managementAccountClient := getSecurityHubClientWithRole(currentRegion, rootRole)
+		adminAccountClient := getSecurityHubClientWithRole(currentRegion, administratorAccountRole)
 
 		hub := SecurityHub{
 			adminAccountClient:      adminAccountClient,
@@ -255,7 +263,11 @@ func validateRegion(enabledRegions []string, region string) bool {
 //
 // https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-cis-to-disable.html
 // https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-fsbp-to-disable.html
-func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, role string, isCloudTrailAccount bool) error {
+func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, role string, isPrivileged bool, isCloudTrailAccount bool) error {
+	if role == "" && !isPrivileged {
+		return errors.New("Either role must be provided or the privileged flag must be set")
+	}
+
 	session := GetSession()
 	accountID := GetAccountID(session, role)
 	enabledRegions := GetEnabledRegions("us-east-1", role, false)
@@ -269,7 +281,13 @@ func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, rol
 	for r := range enabledRegions {
 		currentRegion := enabledRegions[r]
 
-		currentAccountClient := getSecurityHubClient(currentRegion, role)
+		var currentAccountClient *securityhub.SecurityHub
+
+		if isPrivileged {
+			currentAccountClient = getSecurityHubClientWithRole(currentRegion, role)
+		} else {
+			currentAccountClient = getSecurityHubClient(currentRegion)
+		}
 
 		hub := SecurityHub{
 			currentAccountClient: currentAccountClient,

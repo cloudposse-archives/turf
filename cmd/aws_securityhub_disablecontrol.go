@@ -40,16 +40,16 @@ var securityHubDisableGlobalControlsCmd = &cobra.Command{
 	https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-standards-cis-to-disable.html
 	`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		return aws.DisableSecurityHubGlobalResourceControls(globalCollectionRegion, role, isCloudTrailAccount)
+		return aws.DisableSecurityHubGlobalResourceControls(globalCollectionRegion, role, isPrivileged, isCloudTrailAccount)
 	},
 }
 
 func init() {
 	securityHubDisableGlobalControlsCmd.Flags().StringVarP(&globalCollectionRegion, globalCollectionRegionFlag, "g", region, "The AWS Region that contains the global resource collector")
 	securityHubDisableGlobalControlsCmd.Flags().StringVar(&role, roleFlag, "", "The ARN of a role to assume")
+	securityHubDisableGlobalControlsCmd.Flags().BoolVarP(&isPrivileged, isPrivilegedFlag, "", false, "Flag to indicate if the session already has rights to perform the actions in AWS")
 	securityHubDisableGlobalControlsCmd.Flags().BoolVar(&isCloudTrailAccount, cloudTrailAccountFlag, false, "A flag to indicate if this account is the central CloudTrail account")
 
-	securityHubDisableGlobalControlsCmd.MarkFlagRequired(roleFlag)
 	securityHubDisableGlobalControlsCmd.MarkFlagRequired(globalCollectionRegionFlag)
 
 	securityhubCmd.AddCommand(securityHubDisableGlobalControlsCmd)
