@@ -24,8 +24,9 @@ var region string
 var profile string
 var role string
 
-// These flags are used in the GuardDuty and Security Hub sub-commands
+// These flags are used in the AWS sub-commands
 const roleFlag string = "role"
+const isPrivilegedFlag string = "privileged"
 const adminAccountRoleFlag string = "administrator-account-role"
 const rootRoleFlag string = "root-role"
 

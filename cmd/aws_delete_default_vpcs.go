@@ -26,7 +26,7 @@ var shouldDelete bool
 var isPrivileged bool
 
 const shouldDeleteFlag string = "delete"
-const isPrivilegedFlag string = "privileged"
+
 
 var deleteDefaultVPCsCmd = &cobra.Command{
 	Use:   "delete-default-vpcs",
