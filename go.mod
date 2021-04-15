@@ -3,7 +3,7 @@ module github.com/cloudposse/turf
 go 1.15
 
 require (
-	github.com/aws/aws-sdk-go v1.38.3
+	github.com/aws/aws-sdk-go v1.38.18
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/magefile/mage v1.11.0 // indirect
 	github.com/magiconair/properties v1.8.4 // indirect
