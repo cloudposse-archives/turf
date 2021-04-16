@@ -19,8 +19,10 @@ package aws
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/service/securityhub"
 	common "github.com/cloudposse/turf/common/error"
 	"github.com/sirupsen/logrus"
@@ -85,17 +87,33 @@ func (hub SecurityHub) addSecurityHubMemberAccounts(memberAccounts []string, adm
 	}
 }
 
+func (hub SecurityHub) disableControl(currentControl string) error {
+	_, err := hub.currentAccountClient.UpdateStandardsControl(&securityhub.UpdateStandardsControlInput{
+		ControlStatus:       aws.String("DISABLED"),
+		DisabledReason:      aws.String("Global Resources are not collected in this region"),
+		StandardsControlArn: aws.String(currentControl),
+	})
+
+	if err != nil {
+		if aerr, ok := err.(awserr.Error); ok {
+			if aerr.Code() == "TooManyRequestsException" {
+				logrus.Warnf("    received too many requests error. Sleeping then trying again while disabling control %s", currentControl)
+
+				time.Sleep(2 * time.Second)
+				return hub.disableControl(currentControl)
+			}
+		}
+	}
+
+	return err
+}
+
 func (hub SecurityHub) disableControls(region string, accountID string, controls []string) {
 	for i := range controls {
 		currentControl := fmt.Sprintf(controls[i], region, accountID)
 
 		logrus.Infof("    disabling control %s", currentControl)
-
-		_, err := hub.currentAccountClient.UpdateStandardsControl(&securityhub.UpdateStandardsControlInput{
-			ControlStatus:       aws.String("DISABLED"),
-			DisabledReason:      aws.String("Global Resources are not collected in this region"),
-			StandardsControlArn: aws.String(currentControl),
-		})
+		err := hub.disableControl(currentControl)
 
 		if err != nil {
 			logrus.Error(err)
@@ -149,7 +167,7 @@ func getCIS120Controls(isGlobalCollectionRegion bool, isCloudTrailAccount bool) 
 		}...)
 	}
 
-	if !isCloudTrailAccount {
+	if !isCloudTrailAccount || (isCloudTrailAccount && !isGlobalCollectionRegion) {
 		controls = append(controls, []string{
 			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/2.7",
 			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.1",
@@ -207,10 +225,10 @@ func logSecurityHubMemberAccounts(memberAccounts []string) {
 // EnableSecurityHubAdministratorAccount enables the Security Hub Administrator account within the AWS Organization
 func EnableSecurityHubAdministratorAccount(region string, administratorAccountRole string, rootRole string) error {
 	rootSession := GetSession()
-	rootAccountID := GetAccountID(rootSession, rootRole)
+	rootAccountID := GetAccountIDWithRole(rootSession, rootRole)
 
 	adminAcctSession := GetSession()
-	adminAccountID := GetAccountID(adminAcctSession, administratorAccountRole)
+	adminAccountID := GetAccountIDWithRole(adminAcctSession, administratorAccountRole)
 
 	enabledRegions := GetEnabledRegions(region, rootRole, false)
 
@@ -269,8 +287,15 @@ func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, rol
 	}
 
 	session := GetSession()
-	accountID := GetAccountID(session, role)
-	enabledRegions := GetEnabledRegions("us-east-1", role, false)
+	var accountID string
+
+	if isPrivileged {
+		accountID = GetAccountID(session)
+	} else {
+		accountID = GetAccountIDWithRole(session, role)
+	}
+
+	enabledRegions := GetEnabledRegions("us-east-1", role, isPrivileged)
 
 	if !validateRegion(enabledRegions, globalCollectionRegion) {
 		return fmt.Errorf("%s is not a valid enabled region in this account", globalCollectionRegion)
@@ -284,16 +309,16 @@ func DisableSecurityHubGlobalResourceControls(globalCollectionRegion string, rol
 		var currentAccountClient *securityhub.SecurityHub
 
 		if isPrivileged {
-			currentAccountClient = getSecurityHubClientWithRole(currentRegion, role)
-		} else {
 			currentAccountClient = getSecurityHubClient(currentRegion)
+		} else {
+			currentAccountClient = getSecurityHubClientWithRole(currentRegion, role)
 		}
 
 		hub := SecurityHub{
 			currentAccountClient: currentAccountClient,
 		}
 
-		isGlobalCollectionRegion := currentRegion != globalCollectionRegion
+		isGlobalCollectionRegion := currentRegion == globalCollectionRegion
 
 		if isGlobalCollectionRegion {
 			logrus.Infof("  processing global collection region %s", currentRegion)

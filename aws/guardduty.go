@@ -129,10 +129,10 @@ func enableGuardDutyAutoEnable(client *guardduty.GuardDuty, autoEnableS3Protecti
 // EnableGuardDutyAdministratorAccount enables the GuardDuty Administrator account within the AWS Organization
 func EnableGuardDutyAdministratorAccount(region string, administratorAccountRole string, rootRole string, autoEnableS3Protection bool) error {
 	rootSession := GetSession()
-	rootAccountID := GetAccountID(rootSession, rootRole)
+	rootAccountID := GetAccountIDWithRole(rootSession, rootRole)
 
 	adminAcctSession := GetSession()
-	adminAccountID := GetAccountID(adminAcctSession, administratorAccountRole)
+	adminAccountID := GetAccountIDWithRole(adminAcctSession, administratorAccountRole)
 
 	enabledRegions := GetEnabledRegions(region, rootRole, false)
 

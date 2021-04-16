@@ -46,14 +46,20 @@ func GetCreds(sess *session.Session, role string) *credentials.Credentials {
 }
 
 // GetAccountID returns the AWS Account ID of the session
-func GetAccountID(sess *session.Session, role string) string {
-	var client *sts.STS
-	if role == "" {
-		client = getStsClient(sess)
-	} else {
-		creds := GetCreds(sess, role)
-		client = getStsClientWithCreds(sess, creds)
-	}
+func GetAccountID(sess *session.Session) string {
+	client := getStsClient(sess)
+
+	input := sts.GetCallerIdentityInput{}
+	ident, err := client.GetCallerIdentity(&input)
+
+	common.AssertErrorNil(err)
+	return *ident.Account
+}
+
+// GetAccountIDWithRole returns the AWS Account ID of the session after assuming a role
+func GetAccountIDWithRole(sess *session.Session, role string) string {
+	creds := GetCreds(sess, role)
+	client := getStsClientWithCreds(sess, creds)
 
 	input := sts.GetCallerIdentityInput{}
 	ident, err := client.GetCallerIdentity(&input)
