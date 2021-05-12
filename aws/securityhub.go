@@ -169,6 +169,7 @@ func getCIS120Controls(isGlobalCollectionRegion bool, isCloudTrailAccount bool) 
 
 	if !isCloudTrailAccount || (isCloudTrailAccount && !isGlobalCollectionRegion) {
 		controls = append(controls, []string{
+			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/1.1",
 			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/2.7",
 			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.1",
 			"arn:aws:securityhub:%s:%s:control/cis-aws-foundations-benchmark/v/1.2.0/3.2",
