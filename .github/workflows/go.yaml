@@ -35,7 +35,7 @@ jobs:
           LDFLAGS: "-X 'github.com/cloudposse/turf/cmd.Version=${{ steps.get_version.outputs.VERSION }}'"
 
       - name: "Upload artifacts to GitHub"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: ${{ github.event.repository.name }}
           path: ${{ github.workspace }}/release/*
