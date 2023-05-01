@@ -18,9 +18,9 @@ jobs:
         id: get_version
         run: |
           if [[ $GITHUB_REF == refs/tags/* ]]; then
-            echo ::set-output name=VERSION::${GITHUB_REF#refs/tags/}
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
           else
-            echo ::set-output name=VERSION::${GITHUB_SHA}
+            echo "VERSION=${GITHUB_SHA}" >> $GITHUB_OUTPUT
           fi
 
       - name: "Build Go binaries"
