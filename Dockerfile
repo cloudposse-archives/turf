@@ -6,7 +6,7 @@ WORKDIR /usr/src/
 COPY . /usr/src
 RUN go build -v -ldflags="-X 'github.com/cloudposse/turf/cmd.Version=${VERSION}'" -o "bin/turf" *.go 
 
-FROM alpine:3.13
+FROM alpine:3.19
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /usr/src/bin/* /usr/bin/
 ENV PATH $PATH:/usr/bin
